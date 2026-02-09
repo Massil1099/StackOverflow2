@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">StackOverflow</string>
+    <string name="sort_by_question_with_no_response">Only not answered questions</string>
+    <string name="answerCount">%d</string>
+    <string name="refresh_button_content_description">Refresh questions list</string>
+
+</resources>
