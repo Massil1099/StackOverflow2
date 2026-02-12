@@ -5,12 +5,12 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import fr.mastersid.massil.stackoverflow.repository.QuestionsRepository
-import fr.mastersid.massil.stackoverflow.repository.QuestionsRepositoryDummyImpl
+import fr.mastersid.massil.stackoverflow.repository.QuestionsRepositoryImpl
 
 @Module
 @InstallIn(ViewModelComponent:: class)
 abstract class QuestionsRepositoryModule {
     @Binds
-    abstract fun bindQuestionsRepository(questionsRepositoryImpl: QuestionsRepositoryDummyImpl):
+    abstract fun bindQuestionsRepository(questionsRepositoryImpl: QuestionsRepositoryImpl):
             QuestionsRepository
     }

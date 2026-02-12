@@ -133,7 +133,7 @@ fun QuestionRow(question: Question) {
                 style = MaterialTheme.typography.headlineSmall
             )
             Text(
-                text = question.body,
+                text = question.body ?: "",
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
