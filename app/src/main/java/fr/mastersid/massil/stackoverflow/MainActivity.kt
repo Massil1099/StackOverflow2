@@ -18,12 +18,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -64,7 +68,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun QuestionsScreen(modifier: Modifier = Modifier, questionsViewModel: QuestionsViewModel = viewModel()) {
     val questionsList by questionsViewModel.questionsList.observeAsState(emptyList())
     val isUpdating by questionsViewModel.isUpdating.observeAsState(false)
-
+    val errorMessage by questionsViewModel.errorMessage.observeAsState(null)
     var sortByQuestionWithNoResponse by rememberSaveable { mutableStateOf(false) }
 
     val displayedQuestions = if (sortByQuestionWithNoResponse) {
@@ -73,8 +77,20 @@ fun QuestionsScreen(modifier: Modifier = Modifier, questionsViewModel: Questions
         questionsList
     }
 
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(errorMessage){
+        errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            questionsViewModel.clearError()
+        }
+    }
+
+
     Scaffold(
         modifier = modifier,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { questionsViewModel.updateQuestions() }

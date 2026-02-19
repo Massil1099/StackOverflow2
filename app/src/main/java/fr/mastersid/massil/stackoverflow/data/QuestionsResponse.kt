@@ -8,4 +8,9 @@ sealed interface QuestionsResponse {
 
     @JvmInline
     value class Success(val list: List<Question>): QuestionsResponse
+
+    //nouveau etat: etat d'erreur avec un message
+    @JvmInline
+    value class Error(val message: String): QuestionsResponse
+
 }

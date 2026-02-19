@@ -8,6 +8,7 @@ import fr.mastersid.massil.stackoverflow.webservice.QuestionsWebservice
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class QuestionsRepositoryImpl @Inject constructor(
     ) : QuestionsRepository {
 
 
-    private val pendingFlow : MutableSharedFlow < QuestionsResponse > = MutableSharedFlow ()
+    private val pendingFlow : MutableSharedFlow <QuestionsResponse> = MutableSharedFlow()
 
     override val questionsResponse = listOf (
         pendingFlow ,
@@ -34,7 +35,11 @@ class QuestionsRepositoryImpl @Inject constructor(
             questionDao.insertAll(list.items)
 
         } catch (e: IOException) {
-            Log.d("Webservice", "Error: $e")
+            Log.d("Webservice", "Network Error: $e")
+            pendingFlow.emit(QuestionsResponse.Error("Network Error:"))
+        } catch (e: HttpException) {
+            Log.d("Webservice", "Http Error: $e")
+            pendingFlow.emit(QuestionsResponse.Error("Http Request Error:"))
         }
 
 

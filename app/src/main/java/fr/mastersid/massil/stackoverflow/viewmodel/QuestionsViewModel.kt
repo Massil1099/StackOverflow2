@@ -15,34 +15,42 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class QuestionsViewModel @Inject constructor(
     private val questionsRepository: QuestionsRepository
-    ): ViewModel(){
-        private val _questionsList : MutableLiveData <List< Question > > = MutableLiveData(emptyList())
-        val questionsList : LiveData<List<Question>> = _questionsList
+) : ViewModel() {
 
-        private val _isUpdating = MutableLiveData(false)
-        val isUpdating : LiveData <Boolean> = _isUpdating
+    private val _questionsList: MutableLiveData<List<Question>> = MutableLiveData(emptyList())
+    val questionsList: LiveData<List<Question>> = _questionsList
 
-        fun updateQuestions(){
-            viewModelScope.launch(Dispatchers.IO){
-                questionsRepository.updateQuestionsInfo()
-            }
+    private val _isUpdating = MutableLiveData(false)
+    val isUpdating: LiveData<Boolean> = _isUpdating
 
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?> = _errorMessage
+
+    fun updateQuestions() {
+        viewModelScope.launch(Dispatchers.IO) {
+            questionsRepository.updateQuestionsInfo()
         }
+    }
 
-        init {
-            viewModelScope.launch (Dispatchers.IO) {
-                questionsRepository.questionsResponse.collect { response ->
-                    when ( response ) {
-                        is QuestionsResponse.Pending -> _isUpdating.postValue ( true )
-                        is QuestionsResponse.Success -> {
-                            _questionsList.postValue ( response.list )
-                            _isUpdating.postValue ( false )
-                        }
+    fun clearError() {
+        _errorMessage.postValue(null)
+    }
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            questionsRepository.questionsResponse.collect { response ->
+                when (response) {
+                    is QuestionsResponse.Pending -> _isUpdating.postValue(true)
+                    is QuestionsResponse.Success -> {
+                        _questionsList.postValue(response.list)
+                        _isUpdating.postValue(false)
+                    }
+                    is QuestionsResponse.Error -> {
+                        _errorMessage.postValue(response.message)
+                        _isUpdating.postValue(false)
                     }
                 }
             }
         }
-
-
-
+    }
 }
