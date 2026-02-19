@@ -1,5 +1,8 @@
 package fr.mastersid.massil.stackoverflow.data
 
+import fr.mastersid.massil.stackoverflow.db.Question
+
+
 sealed interface QuestionsResponse {
     data object Pending : QuestionsResponse
 

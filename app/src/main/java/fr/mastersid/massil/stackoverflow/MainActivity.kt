@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
-import fr.mastersid.massil.stackoverflow.data.Question
+import fr.mastersid.massil.stackoverflow.db.Question
 import fr.mastersid.massil.stackoverflow.ui.theme.StackOverflowTheme
 import fr.mastersid.massil.stackoverflow.viewmodel.QuestionsViewModel
 
